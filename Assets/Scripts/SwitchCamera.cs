@@ -9,8 +9,8 @@ public class SwitchCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-     cam1.enabled = true;
-     cam2.enabled = false;
+     cam1.enabled = false;
+     cam2.enabled = true;
     }
 
     // Update is called once per frame
