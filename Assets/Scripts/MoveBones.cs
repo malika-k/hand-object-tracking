@@ -11,7 +11,8 @@ public class MoveBones : MonoBehaviour
 
     public Transform thumb, index, middle, ring, pinky;
     public Dictionary<int, Transform> jMap = new Dictionary<int, Transform>();
-    public Dictionary<int, GameObject> cMap = new Dictionary<int, GameObject>();
+    public Dictionary<int, GameObject> hand1Circles = new Dictionary<int, GameObject>();
+    public Dictionary<int, GameObject> hand2Circles = new Dictionary<int, GameObject>();
 
     public void Init() {
       thumb = rootBone.GetChild(0);
@@ -66,14 +67,28 @@ public class MoveBones : MonoBehaviour
     {
       for (int i = 0; i < 21; i++)
       {
-      circle = Instantiate(circle, new Vector3(0,0,0), Quaternion.identity);
-      cMap.Add(i, circle);
+      GameObject circleClone = Instantiate(circle, new Vector3(0,0,0), Quaternion.identity);
+      circleClone.name = "Hand 1 Joint " + i.ToString();
+      hand1Circles.Add(i, circleClone);
+      }
+      for (int i = 0; i < 21; i++)
+      {
+      GameObject circleClone = Instantiate(circle, new Vector3(0,0,0), Quaternion.identity);
+      circleClone.name = "Hand 2 Joint " + i.ToString();
+      hand2Circles.Add(i, circleClone);
       }
     }
 
-    public void setCircle(int jointNum, Vector3 position)
+    public void setCircle(int handNum, int jointNum, Vector3 position)
     {
-      cMap[jointNum].transform.position = position;
+      if (handNum == 1)
+      {
+        hand1Circles[jointNum].transform.position = position;
+      }
+      if (handNum == 2)
+      {
+        hand2Circles[jointNum].transform.position = position;
+      }
     }
 
     public void frameToCircle(Frame frameObj)
@@ -87,7 +102,16 @@ public class MoveBones : MonoBehaviour
           {
             JointObj joint = frameObj.hand1[i];
             Vector3 position = new Vector3((float) joint.x,(float) joint.y,(float) joint.rel_depth);
-            setCircle(i, position);
+            setCircle(1, i, position);
+          }
+        }
+
+        if (frameObj.hand2.Length > 0){
+          for (int i = 0; i < 21; i++)
+          {
+            JointObj joint = frameObj.hand1[i];
+            Vector3 position = new Vector3((float) joint.x,(float) joint.y,(float) joint.rel_depth);
+            setCircle(2, i, position);
           }
         }
       }
